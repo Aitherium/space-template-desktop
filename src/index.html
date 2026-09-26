@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="description" content="A corner of the web, grown as code." />
+    <meta name="color-scheme" content="dark" />
+    <title>My Space</title>
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./space.css" />
+    <script src="./space.js" defer></script>
+  </head>
+  <body>
+    <header class="bar">
+      <span class="mark" aria-hidden="true"></span>
+      <div class="id">
+        <strong data-space="name">My Space</strong>
+        <span class="tagline" data-space="tagline">A corner of the web, grown as code.</span>
+      </div>
+      <span class="agent">Agent <b data-space="agentName">Aither</b></span>
+      <a class="open" id="open-desktop" href="https://aitherium.com/desktop/" target="_blank" rel="noopener">
+        Open your desktop
+      </a>
+    </header>
+    <main>
+      <iframe
+        id="desktop"
+        src="https://aitherium.com/desktop/"
+        title="AitherOS desktop"
+        allow="clipboard-read; clipboard-write; fullscreen; microphone; autoplay"
+        referrerpolicy="strict-origin-when-cross-origin"
+      ></iframe>
+      <noscript>
+        <p class="noscript">
+          This Space needs JavaScript for its branding. The desktop itself is at
+          <a href="https://aitherium.com/desktop/">aitherium.com/desktop</a>.
+        </p>
+      </noscript>
+    </main>
+  </body>
+</html>
