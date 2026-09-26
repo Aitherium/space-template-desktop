@@ -1,9 +1,11 @@
 /* Space branding for the Desktop template.
  *
  * Reads ./aither.config.json (written beside index.html by the Space's deploy
- * workflow) and applies it to the bar above the framed desktop. The desktop in
- * the frame keeps its own look: it takes no branding parameters. A missing or
- * malformed config falls back to the defaults below, so the page always renders.
+ * workflow) and applies it to the bar above the framed surface. `route` picks
+ * which aitherium.com page is framed, from a fixed allowlist; anything else
+ * frames the desktop. The page in the frame keeps its own look: it takes no
+ * branding parameters. A missing or malformed config falls back to the defaults
+ * below, so the page always renders.
  *
  * Exposes the cleaned config as window.AITHER_SPACE and fires an `aither-space`
  * event on window once it is applied.
@@ -14,6 +16,28 @@
  */
 (function () {
   'use strict';
+
+  var ORIGIN = 'https://aitherium.com';
+  var DEFAULT_ROUTE = '/desktop/';
+  // The only pages this template frames: aitherium.com pages that allow being
+  // framed. A route is matched exactly, never as a prefix.
+  var ROUTES = [
+    '/desktop/',
+    '/desktop/?app=terminal',
+    '/playground/',
+    '/saga/',
+    '/iris/',
+    '/lyra/',
+    '/atlas/',
+    '/hera/',
+    '/vera/',
+    '/demo/adk/',
+    '/demo/connect/'
+  ];
+
+  function route(v) {
+    return typeof v === 'string' && ROUTES.indexOf(v) !== -1 ? v : DEFAULT_ROUTE;
+  }
 
   var DEFAULTS = {
     name: 'My Space',
@@ -79,8 +103,27 @@
       accentColor: HEX.test(raw.accentColor || '') ? raw.accentColor : DEFAULTS.accentColor,
       agentName: text(raw.agentName, 40, DEFAULTS.agentName),
       apiBase: httpsUrl(raw.apiBase, DEFAULTS.apiBase),
-      basePath: basePath(raw.basePath)
+      basePath: basePath(raw.basePath),
+      route: route(raw.route)
     };
+  }
+
+  // Point the frame and the "Open full app" link at the configured page. Only
+  // called once the real config is known, so the frame loads one page, once.
+  function frame(cfg) {
+    var url = ORIGIN + cfg.route;
+    var open = document.getElementById('open-full');
+    if (open) open.setAttribute('href', url);
+    var f = document.getElementById('surface');
+    if (f && f.getAttribute('src') !== url) f.setAttribute('src', url);
+  }
+
+  // Under Node (the template's tests) there is no page: expose the pure parts.
+  if (typeof document === 'undefined') {
+    if (typeof module !== 'undefined' && module.exports) {
+      module.exports = { clean: clean, ROUTES: ROUTES.slice(), ORIGIN: ORIGIN };
+    }
+    return;
   }
 
   function apply(cfg) {
@@ -114,5 +157,9 @@
   fetch(new URL('aither.config.json', document.baseURI).href, { cache: 'no-cache' })
     .then(function (r) { return r.ok ? r.json() : null; })
     .catch(function () { return null; })
-    .then(function (raw) { apply(clean(raw)); });
+    .then(function (raw) {
+      var cfg = clean(raw);
+      apply(cfg);
+      frame(cfg);
+    });
 })();

@@ -18,21 +18,21 @@
         <span class="tagline" data-space="tagline">A corner of the web, grown as code.</span>
       </div>
       <span class="agent">Agent <b data-space="agentName">Aither</b></span>
-      <a class="open" id="open-desktop" href="https://aitherium.com/desktop/" target="_blank" rel="noopener">
-        Open your desktop
+      <a class="open" id="open-full" href="https://aitherium.com/desktop/" target="_blank" rel="noopener">
+        Open full app ↗
       </a>
     </header>
     <main>
+      <!-- src is set by space.js from the config's route, so the frame loads once. -->
       <iframe
-        id="desktop"
-        src="https://aitherium.com/desktop/"
-        title="AitherOS desktop"
+        id="surface"
+        title="AitherOS"
         allow="clipboard-read; clipboard-write; fullscreen; microphone; autoplay"
         referrerpolicy="strict-origin-when-cross-origin"
       ></iframe>
       <noscript>
         <p class="noscript">
-          This Space needs JavaScript for its branding. The desktop itself is at
+          This Space needs JavaScript. The AitherOS desktop is at
           <a href="https://aitherium.com/desktop/">aitherium.com/desktop</a>.
         </p>
       </noscript>

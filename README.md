@@ -1,15 +1,38 @@
 # space-template-desktop
 
-The AitherOS Living Desktop as a Space: your name, tagline and accent colour
-in a bar across the top, and the desktop itself full-viewport underneath.
+An AitherOS surface as a Space: your name, tagline and accent colour in a bar
+across the top, and a hosted AitherOS page full-viewport underneath. The
+Living Desktop by default; `route` picks another surface.
 
 ## What this is, plainly
 
-The desktop is not copied into your site. The page frames the hosted desktop
-at `https://aitherium.com/desktop/`, which allows being framed. Your branding
-applies to the bar around it; the desktop keeps its own look because it takes
-no branding parameters. The **Open your desktop** button opens it in its own
-tab, which is also the way in if a browser refuses the frame.
+The surface is not copied into your site. The page frames the hosted page at
+`https://aitherium.com<route>`, which allows being framed. Your branding applies
+to the bar around it; the framed page keeps its own look because it takes no
+branding parameters.
+
+A framed page runs signed out: browsers keep its cookies apart from a visit in
+a normal tab. The **Open full app ↗** link opens the same page in its own tab,
+where you can sign in. It is also the way in if a browser refuses the frame.
+
+## Surfaces
+
+`route` must be exactly one of these paths. Anything else, or no `route` at
+all, frames the desktop.
+
+| route | surface |
+|---|---|
+| `/desktop/` | Living Desktop (the default) |
+| `/desktop/?app=terminal` | AitherShell (awsh), the harness-backed terminal in the desktop |
+| `/playground/` | Community Playground |
+| `/iris/` | Iris |
+| `/lyra/` | Lyra |
+| `/atlas/` | Atlas |
+| `/hera/` | Hera |
+| `/vera/` | Vera |
+| `/saga/` | Saga, agentic narrative storytelling |
+| `/demo/adk/` | awdk tour, a simulated walkthrough of the awdk workflow |
+| `/demo/connect/` | Awconnect demo |
 
 ## Using it
 
@@ -26,7 +49,8 @@ account. It holds one file you edit, `aither.config.json`:
   "name": "My Space",
   "tagline": "A corner of the web, grown as code.",
   "accentColor": "#5ad1ff",
-  "agentName": "Aither"
+  "agentName": "Aither",
+  "route": "/desktop/"
 }
 ```
 
@@ -40,6 +64,7 @@ redeploys.
 | `tagline` | shown in the bar and used as the page description |
 | `accentColor` | the bar's border, marker and button (`#rgb` or `#rrggbb`) |
 | `agentName` | shown in the bar |
+| `route` | which surface is framed, from the table above |
 | `apiBase` | exposed as `window.AITHER_SPACE.apiBase`; the framed desktop uses its own backend |
 | `basePath` | the path the site is served under, exposed as `window.AITHER_SPACE.basePath`; the site itself uses relative URLs and works under any path |
 
@@ -59,7 +84,10 @@ no change for that.
 ```
 
 The output is `dist/site.tar.gz`, built from `src/` and packed flat. The build
-fails if `index.html` references a local file that is not in `src/`.
+fails if `index.html` references a local file that is not in `src/`, if the
+route tests in `test/` fail against the built `space.js`, or if the tarball
+holds anything other than the four site files. It needs `node` for the tests;
+run them alone with `node --test test/space.test.cjs`.
 
 ## Releasing
 
